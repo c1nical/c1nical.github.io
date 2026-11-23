@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="description" content="用三个小数组，拆开字符数量、存储空间和字符串长度。">
+    <meta name="theme-color" content="#101014">
+    <title>一个字符数组的边界 · 夜航手记</title>
+    <link rel="icon" href="../assets/favicon.svg">
+    <link rel="alternate" type="application/atom+xml" href="../feed.xml">
+    <link rel="stylesheet" href="../assets/site.css">
+    <script>try{if(localStorage.getItem('nightlog-theme')==='light')document.documentElement.dataset.theme='light'}catch{}</script>
+    <script defer src="../assets/search-index.js"></script>
+    <script defer src="../assets/site.js"></script>
+    <script defer src="../assets/particles.js"></script>
+  </head>
+  <body data-base="../">
+    <canvas id="pointer-particles" aria-hidden="true"></canvas>
+    <a href="#main" class="skip">跳到正文</a>
+    <header>
+      <div class="bar">
+        <a class="brand" href="../index.html" aria-label="夜航手记首页"><svg aria-hidden="true" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="12" rx="6.4" ry="7.3" transform="rotate(-28 12 12)"/><ellipse cx="12" cy="12" rx="11.5" ry="3.4" transform="rotate(-28 12 12)"/></svg><b>夜航手记</b><small>NIGHTLOG</small></a>
+        <nav aria-label="主导航">
+          <a href="../index.html" >首页</a>
+          <a href="../archive.html" >归档</a>
+          <a href="../tags.html" >标签</a>
+          <a href="../friends.html" >友链</a>
+          <a href="../about.html" >关于</a>
+        </nav>
+        <div class="utilities">
+          <button class="search-open" aria-label="搜索文章"><svg aria-hidden="true" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="10.5" cy="10.5" r="6.7"/><path d="m16 16 5 5"/></svg><span>搜索</span>
+            <kbd>Ctrl K</kbd>
+          </button>
+          <button class="theme" aria-label="切换到浅色主题" title="切换主题"><svg aria-hidden="true" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.5 1.5m11 11L19 19M5 19l1.5-1.5m11-11L19 5"/></svg><svg aria-hidden="true" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 15.5A9 9 0 0 1 8.5 4a9 9 0 1 0 11.5 11.5Z"/></svg></button>
+        </div>
+      </div>
+    </header>
+    <main id="main" class="wrap">
+<div class="reading-progress" aria-hidden="true"></div>
+<article class="reader" data-post="array-string">
+  <div class="reader-head">
+    <a class="breadcrumb" href="../archive.html">文章归档</a>
+    <span class="slash">/</span>
+    <span class="category mint">编程笔记</span>
+    <h1>一个字符数组的边界</h1>
+    <p class="dek">用三个小数组，拆开字符数量、存储空间和字符串长度。</p>
+    <div class="reader-meta">
+      <span>c1nical</span>
+      <i></i>
+      <time>2026.10.26</time>
+      <i></i><svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.4"/><path d="M12 7v5l3.5 2"/></svg> 2 分钟阅读</div>
+    </div>
+    <img class="reader-img" src="../assets/keys.webp" alt="">
+    <div class="article-layout">
+      <div class="prose">
+
+<h2 id="s1">数一下最后的格子</h2>
+<pre><code>char a[] = &quot;cat&quot;;
+char b[3] = {&#39;c&#39;, &#39;a&#39;, &#39;t&#39;};
+char c[8] = &quot;cat&quot;;</code></pre>
+<p>a 的空间是四个字节。编译器把终止符也放进了数组。b 只有三个字符，没有用来标记字符串结尾的空字符。c 的空间是八个字节，初始化之后，剩余位置都为零。</p>
+<h2 id="s2">两种长度</h2>
+<p>在这些数组的定义所在作用域内，sizeof a 给出数组占用的字节数。strlen(a) 从第一个字符开始数，到第一个空字符为止，因此得到 3。对 c 做同样的测试，结果分别是 8 和 3。</p>
+<p>对 b 调用 strlen 会越过已知边界寻找终止符，产生未定义行为。处理这种有显式长度的数据时，可以记录长度，然后按长度遍历。</p>
+<h2 id="s3">把数组传给函数</h2>
+<p>函数形参写成 char s[] 时会被调整为指针。在函数体里对 s 使用 sizeof，得到的是指针的大小。如果函数需要知道缓冲区容量，把容量作为另一个参数一起传进来。</p>
+<div class="post-tags"><a href="../tags.html#tag-0"># C 语言</a> <a href="../tags.html#tag-8"># 字符串</a></div>
+      <div class="post-actions">
+        <button id="save-post" aria-pressed="false"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3.5h12v17L12 17l-6 3.5Z"/></svg><span>收藏</span>
+        </button>
+        <button id="copy-url"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="m9 15 6-6m-4-2 2-2a4 4 0 0 1 6 6l-2 2m-4 4-2 2a4 4 0 0 1-6-6l2-2"/></svg> 复制链接</button>
+      </div>
+      <div class="next">
+        <span>继续阅读</span>
+        <a href="room-tone.html">留一点房间里的声音</a>
+      </div>
+    </div>
+    <aside>
+      <strong>文章目录</strong><a href="#s1">数一下最后的格子</a>
+<a href="#s2">两种长度</a>
+<a href="#s3">把数组传给函数</a></aside>
+    </div>
+  </article>
+    </main>
+    <footer class="wrap">
+      <span>© 2026 c1nical · 夜航手记</span>
+      <a href="../feed.xml"><svg aria-hidden="true" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5c8.3 0 15 6.7 15 15M4 11c5 0 9 4 9 9"/><circle cx="5" cy="19" r="1" fill="currentColor"/></svg> RSS 订阅</a>
+    </footer>
+    <dialog id="search-dialog">
+      <form method="dialog" class="search-bar"><svg aria-hidden="true" width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="10.5" cy="10.5" r="6.7"/><path d="m16 16 5 5"/></svg><input id="query" type="search" aria-label="搜索文章" placeholder="搜索文章、标签或正文…" autocomplete="off">
+        <button title="关闭搜索" aria-label="关闭搜索"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="m5 5 14 14M19 5 5 19"/></svg></button>
+      </form>
+      <div id="search-results"></div>
+    </dialog>
+    <div id="notice" role="status"></div>
+  </body>
+</html>
